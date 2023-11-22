@@ -1,5 +1,6 @@
+'use client';
 import Image from 'next/image';
-import { SignIn } from './ui/login';
+import { SignIn } from './ui/form/login';
 
 export default function Home() {
   return (
