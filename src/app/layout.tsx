@@ -1,6 +1,5 @@
 import './globals.css';
-import { inter } from './ui/fonts';
-import RecoilRootProvider from '@/utils/recoilRootProvider';
+import { inter } from '../utils/fonts';
 
 export default function RootLayout({
   children,
@@ -9,9 +8,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ko">
-      <body className={`${inter.className} antialiased`}>
-        <RecoilRootProvider>{children}</RecoilRootProvider>
-      </body>
+      <body className={`${inter.className} antialiased`}>{children}</body>
     </html>
   );
 }
