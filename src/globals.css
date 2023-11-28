@@ -1,0 +1,119 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  text-decoration: none;
+}
+
+body {
+  background-color: #f5f6fa;
+}
+
+@font-face {
+  font-family: 'LINESeedKR-Bd';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_11-01@1.0/LINESeedKR-Bd.woff2')
+    format('woff2');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'SpoqaHanSansNeo-Regular';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2108@1.1/SpoqaHanSansNeo-Regular.woff')
+    format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+.ScheduleBar {
+  @apply w-[100px] h-[15px] rounded-[30px] bg-[#190482] relative;
+}
+
+.fc-theme-standard .fc-scrollgrid {
+  width: 100%;
+  border-radius: 10px;
+  border: none;
+}
+
+.fc-header-toolbar {
+  width: 100%;
+  position: relative;
+  border-radius: 10px 10px 0px 0px;
+  padding-bottom: 10px;
+}
+
+.fc .fc-toolbar-title {
+  position: absolute;
+  margin: auto;
+  color: #0815a6;
+  max-width: 30%;
+  left: 40%;
+  top: 20px;
+}
+
+.fc-event-title {
+  background-color:none
+}
+
+.fc .fc-button-primary {
+  border: none;
+  background-color: #1c3879;
+  position: relative;
+  top: 15px;
+  margin-right: 18px;
+}
+
+.fc-button-group {
+  position: absolute;
+  border: 0;
+  outline: 0;
+  width: 5rem;
+  left: 10%;
+}
+
+.fc .fc-daygrid-day-number {
+  position: relative;
+  right: 20px;
+  font-size: 17px;
+  font-weight: bold;
+  color: #0815a6;
+  margin-right: 15px;
+}
+
+.fc-col-header-cell-cushion {
+  color: #0815a6;
+  width: 90%;
+  height: 50px;
+  font-size: 18px;
+  padding: 10px;
+  font-weight: bold;
+}
+
+table .fc-scrollgrid-sync-table {
+  width: 538px;
+  height: 700px;
+}
+
+/* border값 초기화 */
+.fc-theme-standard th,
+.fc-theme-standard td {
+  border: 0px;
+}
+
+.fc .fc-daygrid-day-top {
+  position: relative;
+  right: 60px;
+}
+
+.fc-event-time {
+  display: none;
+}
+
+.fc-h-event {
+  background-color:white;
+  border:white;
+}
