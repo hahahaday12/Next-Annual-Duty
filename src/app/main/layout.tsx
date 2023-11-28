@@ -1,8 +1,6 @@
-import { Header } from '@/components/header';
-
+import { Header } from '@/components/common/header';
 
 export default function Layout({ children }: { children: React.ReactNode }) {
-
   return (
     <div className="flex h-screen flex-col md:flex-row md:overflow-hidden bg-[#f5f6fa]">
       <div className="w-full flex-none md:w-64">
