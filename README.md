@@ -38,17 +38,17 @@ SWR의 장점 (`전역 캐시를 이용해 모든 컴포넌트 사이에 데이�
 
 AS-IS <br>
  nextJs 마이그레이션 전 main페이지 성능<br> 
-<img width="600" height="600" alt="image" src="https://github.com/hahahaday12/Next-Annual-Duty/assets/101441685/b7aa7be6-44a9-48ce-98fd-2735d2d2d7dd"><br>
+<img width="300" height="400" alt="image" src="https://github.com/hahahaday12/Next-Annual-Duty/assets/101441685/b7aa7be6-44a9-48ce-98fd-2735d2d2d7dd"><br>
 
 TO-BE
  nextJs 마이그레이션 후 main페이지 성능<br> 
-<img width="600" height="600" alt="image" src="https://github.com/hahahaday12/Next-Annual-Duty/assets/101441685/a54534c5-03b6-431d-b269-0b366776fd2e"><br>
+<img width="300" height="400" alt="image" src="https://github.com/hahahaday12/Next-Annual-Duty/assets/101441685/a54534c5-03b6-431d-b269-0b366776fd2e"><br>
 
 -> 페이지 초기 렌더링 속도가 4.5 초 에서 0.2 초로  nextJs로 마이그레이션후 훨씬더 빠르게 로딩되는 모습을 볼수 있다. <br>
 nextJS 의 특징인 SSR의 장점 "서버에서 완전히 렌더링 된 페이지를 클라이언트로 보내며,<br>
 클라이언트 측 상호 작용에만 추가 JavaScript 로드가 필요하므로 초기 로딩 속도가 빠르다." 를 이용하여 초기 로딩을 개선 하였다.
 
-하지만 아직 
+하지만 아직 성능과, 접근성, 검색엔진 최적화의 성능이 보통이기 때문에 진단 사항을 통해 조금더 개선 해본다. 
 
 
 
