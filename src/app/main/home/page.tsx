@@ -1,8 +1,7 @@
 'use client';
-import { AnnualContainer } from './annual';
-import { DutyContainer } from './duty';
+import { AnnualContainer } from '@/components/home/annual/annual';
+import { DutyContainer } from '@/components/home/duty/duty';
 import { useCallback, useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
 import {
   DeleteAnnualList,
   DeleteDutyList,
@@ -10,16 +9,13 @@ import {
   MyDutyList,
 } from '@/components/api/userInfo';
 import { mainTexts } from '@/constants/mainHome';
+import { CenterBarBox } from '@/components/home/buttonBox/barBox';
+import { AllCalendarList } from '@/components/home/calendar/allCalendar';
 
 export default function HomeMain() {
-  const router = useRouter();
   const [CalDate] = useState<number>(2023);
   const [annualDataList, setAnnualDataList] = useState([]);
   const [dutyDataList, setDutyDataList] = useState([]);
-
-  const onChangeClick = () => {
-    router.push('/application');
-  };
 
   const searchData = useCallback(() => {
     MyAnnualList(CalDate.toString())
@@ -37,7 +33,7 @@ export default function HomeMain() {
       .catch((error) => {
         console.error('Error', error);
       });
-  }, []);
+  }, [CalDate]);
 
   useEffect(() => {
     searchData();
@@ -72,7 +68,7 @@ export default function HomeMain() {
         } else {
           deleteFunction = DeleteDutyList;
         }
-        
+
         const response = await deleteFunction(id);
         console.log(response);
         if (response.status === 200) {
@@ -91,8 +87,8 @@ export default function HomeMain() {
 
   return (
     <>
-      <div className="w-[1060px] h-[1100px] top-[40px] relative bg-orange-400 font-LINESeedKRBd">
-        <div className="mt-[40px] flex gap-5 content-between bg-slate-600">
+      <div className="w-[1060px] h-[1280px] top-[40px] relative font-LINESeedKRBd">
+        <div className="mt-[60px] flex gap-5 content-between">
           {/* 여기에 연차 컨테이너 */}
           <AnnualContainer
             datalist={datalist}
@@ -108,6 +104,8 @@ export default function HomeMain() {
             deleteButton={deleteButton}
           />
         </div>
+        <CenterBarBox />
+        <AllCalendarList />
       </div>
     </>
   );
