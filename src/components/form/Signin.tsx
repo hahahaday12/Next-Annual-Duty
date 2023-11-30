@@ -3,6 +3,7 @@ import { SignIn } from '@/components/api/signin';
 import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/utils/store';
+import { useCallback } from 'react';
 
 export interface IForm {
   email: string;
@@ -24,21 +25,24 @@ export const SigninForm = () => {
     },
   });
 
-  const onSubmit = async (data: IForm) => {
-    try {
-      const res = await SignIn(data.email, data.password);
-      let jwtToken = res.headers.get('Authorization');
-      if (jwtToken) {
-        setToken(jwtToken as string);
-        localStorage.setItem('token', jwtToken as string);
-        alert('로그인 되었습니다!');
-        router.push('/main/home');
+  const onSubmit = useCallback(
+    async (data: IForm) => {
+      try {
+        const res = await SignIn(data.email, data.password);
+        let jwtToken = res.headers.get('Authorization');
+        if (jwtToken) {
+          setToken(jwtToken as string);
+          localStorage.setItem('token', jwtToken as string);
+          alert('로그인 되었습니다!');
+          router.push('/main/home');
+        }
+      } catch (error) {
+        console.error(error);
+        alert('로그인에 실패하였습니다:(');
       }
-    } catch (error) {
-      console.error(error);
-      alert('로그인에 실패하였습니다:(');
-    }
-  };
+    },
+    [router, setToken]
+  );
 
   return (
     <>
