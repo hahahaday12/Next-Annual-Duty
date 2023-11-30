@@ -1,0 +1,11 @@
+// export * from 'constants/headerLinks'
+// export * from 'constants/updateTexts'
+// export * from 'constants/signupTexts'
+// export * from 'constants/signinTexts'
+// export * from 'constants/resetTexts'
+// export * from 'constants/applyCategory'
+// export * from 'constants/excelCategory'
+// export * from 'constants/mainHome'
+// export * from 'constants/commonTexts'
+// export * from 'constants/applicationTexts'
+export * from './commonTexts';
