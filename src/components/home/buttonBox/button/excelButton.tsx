@@ -29,24 +29,15 @@ export const ExCelbox = () => {
     }
   };
 
-  // const renderBox = () => (
-  //     <option value="excel" selected>
-  //       엑셀로 다운받기
-  //     </option>
-  //     {ExcelCategory.map((item) => (
-  //       <option key={item.id}>{item.name}</option>
-  //     ))}
-  // );
-
   return (
-    <div className="w-[180px] h-[40px] pb-[5px] float-left rounded-[3px] mt-1 bg-[#1b9c85] text-[10px] cursor-pointer">
+    <div className="w-[180px] h-[40px] pb-[5px] float-left rounded-[3px] mt-1 bg-[#045F76] text-[10px] cursor-pointer">
       <select
-        className="w-[120px] h-[40px] text-[13px] bg-[#1b9c85] rounded-none font-bold relative text-white "
+        className="w-[120px] h-[40px] text-[13px] bg-[#045F76] rounded-none font-bold relative text-white "
         value={selectedOption}
         onChange={(e) => setSelectedOption(e.target.value)}
       >
         {ExcelCategory.map((item) => (
-          <option key={item.id}>{item.name}</option>
+          <option key={item.id}>{item.label}</option>
         ))}
       </select>
 
