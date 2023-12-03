@@ -45,9 +45,9 @@ export const SigninForm = () => {
   );
 
   return (
-    <>
+    <div className="">
       <form
-        className="flex flex-col relative mt-[100px]"
+        className="flex flex-col bg-slate-100"
         onSubmit={handleSubmit(onSubmit)}
       >
         <div className="padding-[10px] inline-[16px] font-bold w-[400px]">
@@ -76,6 +76,6 @@ export const SigninForm = () => {
           로그인
         </button>
       </form>
-    </>
+    </div>
   );
 };
