@@ -1,3 +1,4 @@
+'use client';
 import { mainTexts } from '@/constants/mainHome';
 import { useRouter } from 'next/navigation';
 import { IoReload } from 'react-icons/io5';
