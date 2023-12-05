@@ -9,14 +9,23 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@fullcalendar/react": "^6.1.9",
+    "clsx": "^2.0.0",
+    "fullcalendar": "^6.1.9",
     "next": "14.0.3",
     "react": "^18",
+    "react-datepicker": "^4.24.0",
     "react-dom": "^18",
-    "react-hook-form": "^7.48.2"
+    "react-hook-form": "^7.48.2",
+    "react-icons": "^4.12.0",
+    "swr": "^2.2.4",
+    "tailwind-styled-components": "^2.2.0",
+    "zustand": "^4.4.6"
   },
   "devDependencies": {
     "@types/node": "^20",
     "@types/react": "^18",
+    "@types/react-datepicker": "^4.19.3",
     "@types/react-dom": "^18",
     "autoprefixer": "^10.0.1",
     "eslint": "^8",
