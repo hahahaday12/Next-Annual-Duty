@@ -11,7 +11,7 @@
 <div align=center><h1> ⚙ 프로젝트 설계 </h1></div><br>
 
 
-🔥오류 고찰 및 코드 작성🔥<br>
+🔥오류 고찰 및 변경점🔥<br>
 📌 1. token 가져오기 , token 저장
 next에서는 axios 보다는 fetch를 권하고 있음. 따라, 모든 api 를 fetch로 변경. <br>
 하지만, fetch에는 axios의 장점인 intercepter 이 없으며 , 인증을 위한 token값을 매번 헤더에 넣어줘야 하는 번거로움이 있음.<br>
@@ -29,7 +29,9 @@ SWR 를  이용하여 구현 .
 따라 calenndarLayout 이라는 custom hook 을 생성한뒤 중복되는 로직에 해당 훅을 사용
 
 📌 4. 기존에 상위페이지에서 (연차/당직 버튼, 연차 신청 모달, 당직 신청 모달) 컴포넌트에 props 로 데이터를 전달해 주었고, 각각 모달 컴포넌트 안에서 필요한 코드 로직을 작성 하였음.<br>
-하지만, 각각의 모달 컴포넌트 에서 중복 되는 로직을 
+하지만, 각각의 모달 컴포넌트 에서 중복 되는 로직을 customhook으로 변경 하였고, 상위 컴포넌트에서 props로 받아온 함수 데이터는 , 다시 customhook에 props로 전달.
+
+
 
 
 
