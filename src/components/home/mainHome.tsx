@@ -7,7 +7,7 @@ import {
   DeleteDutyList,
   MyAnnualList,
   MyDutyList,
-} from '../api/userInfo';
+} from '../api/allApis';
 import { mainTexts } from '@/constants/mainHome';
 
 export default function AllAnnualDuty() {
