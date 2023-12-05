@@ -1,5 +1,4 @@
 import '@/globals.css';
-import { inter } from '../utils/fonts';
 
 export default function RootLayout({
   children,
@@ -8,7 +7,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ko">
-      <body className={`${inter.className} antialiased`}>{children}</body>
+      <meta name="theme-color" content="#2656f6" />
+      <title>당연하지</title>
+      <body>{children}</body>
     </html>
   );
 }
