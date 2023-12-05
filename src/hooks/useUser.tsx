@@ -1,5 +1,5 @@
 import useSWR from 'swr';
-import { userInfo } from '@/components/api/userInfo';
+import { userInfo } from '@/components/api/allApis';
 
 export const useUser = () => {
   const { data, error, isValidating } = useSWR('/api/user/info', userInfo, {});
