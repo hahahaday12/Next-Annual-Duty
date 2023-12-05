@@ -1,6 +1,6 @@
 'use client';
 import { AiOutlineCheckCircle } from 'react-icons/ai';
-import { ExcelAnnualList, ExcelDutyList } from '@/components/api/userInfo';
+import { ExcelAnnualList, ExcelDutyList } from '@/components/api/allApis';
 import { ExcelCategory } from '@/constants/excelCategory';
 import { useState } from 'react';
 
