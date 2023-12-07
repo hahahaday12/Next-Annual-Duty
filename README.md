@@ -38,7 +38,11 @@ SWR 를  이용하여 구현 .
 
 
 6.
+
+-------------------------------------
 🔥성능 변화 기록🔥<br>
+
+1. 🌺 메인 홈 페이지 🌺
 
 ✨ AS-IS <br>
 -> nextJs 마이그레이션 전 main페이지 성능<br> 
@@ -55,10 +59,10 @@ SWR 를  이용하여 구현 .
   따라서 기존 react 로 구현 하였을때 보다 훨씬더 빠른 초기 로딩속도를 경험 할수 있던것 같다.<br>
   하지만 아직 성능과, 접근성, 검색엔진 최적화의 성능이 보통이기 때문에 진단 사항을 통해 조금더 개선 해본다.<br> 
 
-📌 1. < title > 요소가 없음<br>
+📌 1) < title > 요소가 없음<br>
 <img width="260" alt="image" src="https://github.com/hahahaday12/Next-Annual-Duty/assets/101441685/b65a17c7-e988-4f69-a1f8-6c8c1e4e2598">
 
-📌 2. 주소 표시줄의 테마 색상을 설정하지 않음<br>
+📌 2) 주소 표시줄의 테마 색상을 설정하지 않음<br>
 <img width="325" alt="image" src="https://github.com/hahahaday12/Next-Annual-Duty/assets/101441685/b38fb3e0-87ef-49e8-9aa9-2cbfd6e3b340">
 
 ✅ 1,2 번 수정 코드 <br>
@@ -71,7 +75,7 @@ SWR 를  이용하여 구현 .
     </html>
   );
 ```
-📌 3. 네트워크 페이로드 크기에 대해 나왔는데 그중 home/page.tsx 의 페이로드가 크다는것을 보았다. <br/>
+📌 3) 네트워크 페이로드 크기에 대해 나왔는데 그중 home/page.tsx 의 페이로드가 크다는것을 보았다. <br/>
 실제로 app 디렉토리의 하위 폴더는 기본적으로 RSC 가 적용되어있어서 <br>
 'use client' 즉 , 클라이언트 컴포넌트가 되지 않는것을 권장하는데 해당 페이지에 state, 와 이벤트 값을 썼기 때문에 코드가 길어짐에 따라 페이로드 크기도 커진것 같다.
 따라 page.tsx 에는 기본적인 정적 레이아웃만 넣어 놓고 , 이외의 코드는 따로 app 폴더의 동일 선상에 있는 components/ home/homepage.tsx 파일에 분리 해서 작성 하였다.
@@ -141,7 +145,7 @@ export default function HomeMain() {
 -> props 와 이벤트 코드가 쓰이는 부분을 다른 컴포넌트 로 분리해서 수정하였지만, 분리 해도 실행되는 api와 실행 코드는 똑같기 때문에 페이로드 크기가 변동 되지 않았다.
 하지만 RSC 와 RCC 의 컴포넌트를 적절하게 나눴다고 생각하기 때문해 해당 부분은 일단 보류 해둔다.<br> 
 
-📌 4. 저대비 색상 문제<br> 
+📌 4) 저대비 색상 문제<br> 
   -> 저대비 이미지 때문에 텍스트가 보이지 않을수도 있다는 뜻인것 같다. 아래 사이트 들어가보니 내가 사용하는 색이 WCAG 표준 에 적합한지 알려 준다.
   해당 페이지를 보면 '영향을 받는 장애' 에 대해 저시력 이나 색맹이신 분들이 구별하지 못하는 색상을 알려주고 그래프로 사용자 영향에 얼만큼 미치는지 알려준다. <br>
   
@@ -158,5 +162,14 @@ export default function HomeMain() {
 -> 성능 진단을 기반하 여 수정후 두번째 main페이지 성능<br> 
 <img width="250" height="300" alt="image" src="https://github.com/hahahaday12/Next-Annual-Duty/assets/101441685/811291ad-61c1-4654-a49c-e850965193ca">
 
+-------
+2. 🌺연차 , 당직 신청 페이지🌺
 
+✨ AS-IS <br>
+-> nextJs 마이그레이션 전 연차,당직 페이지 성능<br> 
+<img width="350" height="400" alt="image" src="https://github.com/hahahaday12/Next-Annual-Duty/assets/101441685/37a2c729-f4c2-4408-a4f0-d2bc760a2ea7"><br>
+
+✨ TO-BE <br>
+-> nextJs 마이그레이션 후 main페이지 성능<br> 
+<img width="350" height="400" alt="image" src="https://github.com/hahahaday12/Next-Annual-Duty/assets/101441685/732d3086-5e79-41c1-8a2e-bc44025678c7"><br>
 
