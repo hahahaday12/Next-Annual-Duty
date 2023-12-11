@@ -19,24 +19,14 @@ body {
     format('woff2');
   font-weight: 400;
   font-style: normal;
-}
-
-@font-face {
-  font-family: 'SpoqaHanSansNeo-Regular';
-  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2108@1.1/SpoqaHanSansNeo-Regular.woff')
-    format('woff');
-  font-weight: normal;
-  font-style: normal;
-}
-
-.ScheduleBar {
-  @apply w-[100px] h-[15px] rounded-[30px] bg-[#190482] relative;
+  font-display: swap;
 }
 
 .fc-theme-standard .fc-scrollgrid {
   width: 100%;
   border-radius: 10px;
   border: none;
+  font-family: 'LINESeedKR-Bd';
 }
 
 .fc-header-toolbar {
@@ -53,10 +43,11 @@ body {
   max-width: 30%;
   left: 40%;
   top: 20px;
+  font-family: 'LINESeedKR-Bd';
 }
 
-.fc-event-title {
-  background-color:none
+.fc-event-title fc-sticky {
+  padding: 2px;
 }
 
 .fc .fc-button-primary {
@@ -67,7 +58,7 @@ body {
   margin-right: 18px;
 }
 
-.fc-button-group {
+.fc .fc-button-group {
   position: absolute;
   border: 0;
   outline: 0;
@@ -84,21 +75,33 @@ body {
   margin-right: 15px;
 }
 
+.fc-daygrid-event-dot {
+  border: none;
+}
+
+.fc-daygrid-dot-event .fc-event-title {
+  background-color: #7752fe;
+  position: relative;
+  left: -7px;
+  border-radius: 3px;
+  color: white;
+  padding-left: 5px;
+}
+
 .fc-col-header-cell-cushion {
   color: #0815a6;
   width: 90%;
-  height: 50px;
+  height: 30px;
   font-size: 18px;
   padding: 10px;
   font-weight: bold;
 }
 
 table .fc-scrollgrid-sync-table {
-  width: 538px;
-  height: 700px;
+  width: 1213px;
+  height: 864px;
 }
 
-/* border값 초기화 */
 .fc-theme-standard th,
 .fc-theme-standard td {
   border: 0px;
@@ -109,11 +112,45 @@ table .fc-scrollgrid-sync-table {
   right: 60px;
 }
 
+.fc-daygrid-day-bottom {
+  margin-top: 63px;
+}
+
 .fc-event-time {
   display: none;
 }
 
-.fc-h-event {
-  background-color:white;
-  border:white;
+.fc-daygrid-day-events {
+  margin-top: 22px;
 }
+
+.fc-h-event .fc-event-main-frame {
+  background-color: #190482;
+  border-radius: 3px;
+  border: none;
+  padding-left: 5px;
+}
+
+.fc-h-event {
+  background-color: white;
+  border: none;
+}
+
+/* .fc-event
+  .fc-event-start
+  .fc-event-end
+  .fc-event-past
+  .fc-daygrid-event
+  .fc-daygrid-dot-event {
+  margin-top: 10px;
+} */
+
+/* .fc-event
+  .fc-event-start
+  .fc-event-end
+  .fc-event-past
+  .fc-daygrid-event
+  .fc-daygrid-dot-event {
+  position: relative;
+  display: inline;
+} */
