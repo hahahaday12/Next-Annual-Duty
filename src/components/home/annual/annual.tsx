@@ -2,7 +2,7 @@
 import { mainTexts } from '@/constants/mainHome';
 import { useUser } from '@/hooks/useUser';
 import { convertStatusToText } from '@/constants/customStatus';
-import { StatusBox, CancelBox } from '@/components/styleCommon/styleCommon';
+import { StatusBox } from '@/components/styleCommon/styleCommon';
 import { ApplyInfobox } from '@/components/home/applyLayout/boxComponets';
 
 interface Item {
@@ -46,7 +46,6 @@ export const AnnualContainer = ({
               <div
                 className="w-[70px] absolute right-[20px] pl-[25px] cursor-pointer text-[12px] rounded-[5px] p-[5px] bg-[#212a3e] text-white"
                 onClick={() => deleteButton('연차', item.id)}
-                //status={item.status}
               >
                 {mainTexts.annualCancel}
               </div>
