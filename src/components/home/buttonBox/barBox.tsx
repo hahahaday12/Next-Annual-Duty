@@ -17,8 +17,8 @@ export const CenterBarBox = () => {
   };
 
   return (
-    <div className="relative mt-[10px] flex content-between justify-between">
-      <div className="w-[250px] relative mt-[13px] flex">
+    <div className="w-[1037px] m-auto mt-[50px] relative flex justify-between">
+      <div className="w-[200px] relative mt-[13px] flex">
         <div
           className="w-[150px] text-white bg-[#1c3879d9] text-[15px] rounded-[10px] h-[40px] border-none font-bold cursor-pointer p-[10px] pl-[25px]"
           onClick={onChangeClick}
