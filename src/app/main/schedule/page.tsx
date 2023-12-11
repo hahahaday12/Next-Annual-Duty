@@ -3,7 +3,7 @@ import { CommonBarButton } from '@/components/home/buttonBox/button/barButton';
 
 export default async function SchedulePage() {
   return (
-    <div className="w-[1060px] h-[1000px] top-[20px] relative m-auto">
+    <div className="w-[1060px] h-[1000px] top-[20px] relative m-auto font-LINESeedKRBd">
       <div className="w-[210px] h-[50px] ml-[800px] mt-[100px] font-semibold">
         <CommonBarButton />
       </div>
