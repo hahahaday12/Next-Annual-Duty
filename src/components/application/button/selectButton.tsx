@@ -9,7 +9,6 @@ export const SelectButton = () => {
   const [activeButton, setActiveButton] = useState('DUTY');
 
   const handleButtonClick = (button: 'ANNUAL' | 'DUTY') => {
-    console.log(button);
     setSelectedButton(button);
     setActiveButton(button);
   };
