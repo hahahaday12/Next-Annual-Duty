@@ -63,48 +63,16 @@ export const CancelBox: React.FC<StatusBoxProps> = ({ status }) => {
   );
 };
 
-export const CustomEvent: React.FC<TitleBoxProps> = ({ title, children }) => {
-  const backgroundColor = clsx({
-    'bg-[#190482]': title === 'ANNUAL',
-    'bg-[#7752FE]': title === 'DUTY',
-  });
+// export const CustomEvent: React.FC<TitleBoxProps> = ({ title, children }) => {
+//   const backgroundColor = title === 'ANNUAL' ? 'bg-[#190482]' : 'bg-[#7752FE]';
 
-  return (
-    <div
-      className={clsx(
-        'text-[15px]',
-        'w-full',
-        'h-[20px]',
-        'm-auto',
-        'rounded-[3px]',
-        'pl-[3px]',
-        'text-[#ffff]',
-        'border-none',
-        'overflow-hidden',
-        backgroundColor
-      )}
-    >
-      {children}
-    </div>
-  );
-};
-
-// const ButtonStyle = ({ isActive }: { isActive: boolean }) => {
-//   const buttonClasses = clsx(
-//     'w-32', // Width 125px
-//     'text-white', // Text color
-//     'rounded-2xl', // Border radius 10px
-//     'p-5', // Padding 20px
-//     'font-semibold', // Font weight 800
-//     'border-none', // No border
-//     'cursor-pointer', // Cursor pointer
-//     'mt-3', // Margin top 10px
-//     'bg-blue-800', // Background color when active
-//     'ml-3', // Margin left when not active
-//     { '-ml-10': isActive } // Conditional margin left when active
+//   return (
+//     <div
+//       className={`text-[15px] w-full h-[20px] m-auto rounded-[3px] pl-[3px] text-[#ffff] border-none font-LINESeedKRBd mt-[10px] ${backgroundColor}`}
+//     >
+//       {children}
+//     </div>
 //   );
-
-//   return <button className={buttonClasses}>Your Button Text</button>;
 // };
 
 export const ButtonStyle: React.FC<ButtonProps> = ({
@@ -113,8 +81,8 @@ export const ButtonStyle: React.FC<ButtonProps> = ({
   children,
 }) => {
   const backgroundColor = clsx({
-    'bg-[#190482]': isActive === true,
-    'bg-[#7752FE]': isActive === false,
+    'bg-[#0C356A]': isActive === true,
+    'bg-[#1a3ba5e2]': isActive === false,
   });
 
   const marginLeft = clsx({
@@ -131,6 +99,7 @@ export const ButtonStyle: React.FC<ButtonProps> = ({
         'p-[20px]',
         'border-none',
         'cursor-pointer',
+        'font-normal',
         backgroundColor,
         marginLeft
       )}
