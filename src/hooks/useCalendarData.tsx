@@ -10,65 +10,64 @@ export type Item = {
   username: string;
 };
 
-type User = {
-  startDate: string;
-  endDate: string;
+type Annual = {
+  title: string;
+  startDate: Date;
+  endDate: Date;
+  type: string;
+  status: string;
   username: string;
-  response: any;
-  status: 'PENDING' | 'APPROVE' | 'REJECT' | 'CANCELLED';
 };
 
 type Duty = {
   title: string;
   response: any;
-  dutyDate: string;
+  dutyDate: Date;
   email: string;
   username: string;
-  status: 'PENDING' | 'APPROVE' | 'REJECT' | 'CANCELLED';
+  status: string;
 };
 
+export type CombinedDataItem = Annual | Duty;
+
 export const useCalendarData = (
-  fetchDataFunction1: Promise<User>,
+  fetchDataFunction1: Promise<any>,
   fetchDataFunction2: Promise<Duty>,
-  getMyTitle: (item: ItemUsername) => string,
-  CalDate: number
+  getStatus: (item: ItemUsername) => string,
+  CalDate: string
 ) => {
-  const [viewDrow, setViewDrow] = useState<Item[]>([
-    {
-      title: '',
-      start: '',
-      end: '',
-      status: '',
-      type: '',
-      username: '',
-    },
-  ]);
+  const [viewDrow, setViewDrow] = useState<CombinedDataItem[]>([]);
 
   useEffect(() => {
     Promise.all([fetchDataFunction1, fetchDataFunction2])
       .then(([data1, data2]) => {
-        const processedData1 = data1.response.map((item: User) => ({
-          title: getMyTitle(item),
+        const processedData1: Annual[] = data1.response.map((item: Annual) => ({
+          title: getStatus(item),
           start: new Date(item.startDate).toISOString(),
           end: new Date(item.endDate).toISOString(),
           type: 'ANNUAL',
           status: '',
+          username: '',
         }));
 
         const processedData2: Duty[] = data2.response.map((item: Duty) => ({
           ...item,
-          title: getMyTitle(item),
-          date: new Date(item.dutyDate),
+          title: getStatus(item),
+          start: item.dutyDate,
+          end: '',
           type: 'DUTY',
           status: '',
+          username: '',
         }));
-        const combinedData = [...processedData1, ...processedData2];
+        const combinedData: CombinedDataItem[] = [
+          ...processedData1,
+          ...processedData2,
+        ];
         setViewDrow(combinedData);
       })
       .catch((error) => {
         console.error('error', error);
       });
   }, [CalDate]);
-
   return { viewDrow };
 };
