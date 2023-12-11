@@ -808,7 +808,7 @@ export default function AllAnnualDuty() {
   );
 }
 ```
-📁 allCalendar.tsx
+📁 allCalendar.tsx <br>
 -> useEffect 의 인자 값을 사용해 annualDataList, dutyDataList 가 변경될시   searchCalendar(); 함수를 실행 시켜 
 재조회 해오게 끔 코드 작성. 
 
@@ -997,6 +997,7 @@ export default function HomeMain() {
 
 -------
 2. 🌺연차 , 당직 신청 페이지🌺
+-> 기존 코드 로직에서 모달 페이지 공통 함수 customHook 생성, swr 을 이용한 유저 정보 가져오기 등 수정후 초기 로딩 속도가 4.5초 -> 0.3 초로 개선 되었다. 
 
 ✨ AS-IS <br>
 -> nextJs 마이그레이션 전 연차,당직 신청 페이지 성능<br> 
@@ -1005,4 +1006,6 @@ export default function HomeMain() {
 ✨ TO-BE <br>
 -> nextJs 마이그레이션 후 연차,당직 신청 페이지 성능<br> 
 <img width="350" height="400" alt="image" src="https://github.com/hahahaday12/Next-Annual-Duty/assets/101441685/732d3086-5e79-41c1-8a2e-bc44025678c7"><br>
+
+
 
