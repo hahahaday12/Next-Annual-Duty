@@ -9,22 +9,21 @@ import {
   MyDutyList,
 } from '../api/allApis';
 import { mainTexts } from '@/constants/mainHome';
+import { useUpdateDate } from '@/utils/store';
 
 export default function AllAnnualDuty() {
+  const { annualDataList, dutyDataList, setAnnualDataList, setDutyDataList } =
+    useUpdateDate();
   const [CalDate] = useState<number>(2023);
-  const [annualDataList, setAnnualDataList] = useState([]);
-  const [dutyDataList, setDutyDataList] = useState([]);
 
   const searchData = useCallback(() => {
     MyAnnualList(CalDate.toString())
       .then((data) => {
-        console.log(data.response);
         const returnDatalist = data.response;
         setAnnualDataList(returnDatalist);
         return MyDutyList(CalDate.toString());
       })
       .then((data) => {
-        console.log(data.response);
         const returnDatalist = data.response;
         setDutyDataList(returnDatalist);
       })
@@ -42,7 +41,7 @@ export default function AllAnnualDuty() {
       const date = dateString.split('T')[0];
       return date;
     }
-    return '';
+    return false;
   };
 
   const datalist = useCallback((datalist: any[]) => {
@@ -56,7 +55,7 @@ export default function AllAnnualDuty() {
     async (type: string, id: string) => {
       if (!window.confirm(`${type}를 취소 하시겠습니까?`)) {
         alert(mainTexts.cancelText);
-        return;
+        return false;
       }
 
       try {
@@ -66,9 +65,7 @@ export default function AllAnnualDuty() {
         } else {
           deleteFunction = DeleteDutyList;
         }
-
         const response = await deleteFunction(id);
-        console.log(response);
         if (response.status === 200) {
           alert(`${type}가 취소되었습니다.`);
           searchData();
@@ -79,12 +76,10 @@ export default function AllAnnualDuty() {
         console.error(error);
         alert(mainTexts.areadyApply);
       }
-    },
-    [searchData]
-  );
+    },[searchData]);
 
   return (
-    <>
+    <div className="m-auto flex gap-[10px]">
       <AnnualContainer
         datalist={datalist}
         annualDataList={annualDataList}
@@ -97,6 +92,6 @@ export default function AllAnnualDuty() {
         extractDate={extractDate}
         deleteButton={deleteButton}
       />
-    </>
+    </div>
   );
 }
