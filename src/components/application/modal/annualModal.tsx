@@ -16,6 +16,12 @@ type ModalProps = {
   username: string;
 };
 
+export type ViewData = {
+  startDate: string;
+  endDate: string;
+  reason: string;
+};
+
 export const AnnualModal = ({
   close,
   selectedDate,
@@ -30,7 +36,7 @@ export const AnnualModal = ({
     SelectReason: '사유선택',
   };
 
-  const { UTCchangeKST, sendReg, isWeekday } = useCommonModal(
+  const { UTCchangeKST, sendReg, isWeekday } = useCommonModal<ViewData>(
     ApplyAnnual,
     searchData,
     close
@@ -39,7 +45,7 @@ export const AnnualModal = ({
   const [startDate] = useState(selectedDate || new Date());
   const [endDate, setEndDate] = useState(selectedDate || new Date());
   const [getReason, setReason] = useState('연차');
-  const [ViewData] = useState({
+  const [ViewData] = useState<ViewData>({
     startDate: '',
     endDate: '',
     reason: '',
@@ -52,7 +58,6 @@ export const AnnualModal = ({
     }
     selectedDate.setHours(9, 0, 0, 0);
     const isDuplicateDate = data.filter((item) => {
-      console.log(item);
       const startDay = item.start;
       const endDay = item.end;
       startDay.setHours(9, 0, 0, 0);

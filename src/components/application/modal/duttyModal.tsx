@@ -15,6 +15,10 @@ type DuttyModalProps = {
   username: string;
 };
 
+export type DutyData = {
+  dutyDate: string;
+}
+
 export const DuttyModal = ({
   close,
   selectedDate,
@@ -27,7 +31,7 @@ export const DuttyModal = ({
     ApplyDutty: '당직 신청',
     SelectDate: '날짜 선택',
   };
-  const { UTCchangeKST, sendReg, isWeekday } = useCommonModal(
+  const { UTCchangeKST, sendReg, isWeekday } = useCommonModal<DutyData>(
     ApplyDuty,
     searchData,
     close
@@ -51,7 +55,6 @@ export const DuttyModal = ({
         return item;
       }
     });
-    console.log(isDuplicateDate.length);
     if (isDuplicateDate.length > 0) {
       alert('이미 해당 날짜에 신청한 당직이 존재합니다.');
       return false;
