@@ -25,19 +25,852 @@ SWR 키를 사용하며 그 요청이 자동으로 중복 제거, 캐시, 공유
 또한, '프로필 수정' 컴포넌트에서도 userInfo 의 데이터가 필요하기 때문에 , <br/>
 SWR 를  이용하여 구현 .
 
-📌 3. 일정 관리 사이트 이다 보니 fullCalendar 를 연동하는 로직이 많이 중복 되었다는 느낌을 받음.  <br>
-따라 calenndarLayout 이라는 custom hook 을 생성한뒤 중복되는 로직에 해당 훅을 사용
+📌 3. 기존에 상위페이지에서 (연차/당직 버튼, 연차 신청 모달, 당직 신청 모달) 컴포넌트에 props 로 데이터를 전달해 주었고, 각각 모달 컴포넌트 안에서 필요한 코드 로직을 작성 하였음.<br>
+하지만, 각각의 모달 컴포넌트 에서 중복 되는 로직을 customhook(useCommonModal)으로 변경 하였고, 상위 컴포넌트에서 props로 받아온 함수 데이터는 , 다시 customhook에 props로 전달.
 
-📌 4. 기존에 상위페이지에서 (연차/당직 버튼, 연차 신청 모달, 당직 신청 모달) 컴포넌트에 props 로 데이터를 전달해 주었고, 각각 모달 컴포넌트 안에서 필요한 코드 로직을 작성 하였음.<br>
-하지만, 각각의 모달 컴포넌트 에서 중복 되는 로직을 customhook으로 변경 하였고, 상위 컴포넌트에서 props로 받아온 함수 데이터는 , 다시 customhook에 props로 전달.
+🧩이전 코드 
+
+📁ApplyModal.tsx
+```javascript
+export const AnnualModal = ({
+  close,
+  selectedDate,
+  setSelectedDate,
+  searchData,
+  data,
+  username
+}) => {
+  const SubmitText = {
+    ApplyAnnual: '연차 신청',
+    SelectDate: '날짜 선택',
+    SelectReason: '사유선택'
+  }
+
+  const [startDate] = useState(selectedDate || new Date())
+  const [endDate, setEndDate] = useState(selectedDate || new Date())
+  const [getReason, setReason] = useState('연차')
+  const [ViewData] = useState({
+    startDate: '',
+    endDate: '',
+    reason: ''
+  })
+
+  const handleChange = e => {
+    console.log(e.target.value)
+    setReason(e.target.value)
+  }
+
+  const submitButton = () => {
+    selectedDate.setHours(9, 0, 0, 0)
+    const isDuplicateDate = data.filter(item => {
+      console.log(item)
+      const startDay = item.start
+      const endDay = item.end
+      startDay.setHours(9, 0, 0, 0)
+      endDay.setHours(9, 0, 0, 0)
+      endDate.setHours(9, 0, 0, 0)
+
+      if (
+        endDate >= startDay &&
+        endDate <= endDay &&
+        item.username === username
+      ) {
+        return item
+      }
+    })
+
+    if (isDuplicateDate.length > 0) {
+      alert('이미 해당 날짜에 신청한 연차가 존재합니다.')
+      return false
+    }
+
+    const updatedData = {
+      ...ViewData,
+      startDate: UTCchangeKST(startDate),
+      endDate: UTCchangeKST(endDate),
+      reason: getReason
+    }
+
+    if (confirm('연차 신청 하시겠습니까?')) {
+      sendReg(updatedData)
+    }
+
+    return
+  }
+
+  const UTCchangeKST = date => {
+    let krDate = new Date(date)
+    krDate.setHours(krDate.getHours() + 9)
+    return krDate.toISOString()
+  }
+
+  const sendReg = async (updatedData: any) => {
+    try {
+      const response = await applyAnnual(updatedData)
+      if (response.status === 200) {
+        alert('연차가 신청 되었습니다.')
+        searchData()
+        close()
+      } else {
+        alert('등록 실패했습니다. 관리자에게 문의하세요.')
+      }
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  const renderBox = () =>
+    CategoryBox.map(item => {
+      return <option key={item.id}>{item.name}</option>
+    })
+
+  const isWeekday = date => {
+    const day = date.getDay()
+    return day !== 0 && day !== 6
+  }
+
+  return (
+    <>
+      <ModalContent>
+        <Centerbox>
+          <XbuttonBox onClick={close}>x</XbuttonBox>
+            코드 생략..
+          <PickReason>{SubmitText.SelectReason}</PickReason>
+          <SelectContainer>
+            <Selectbox onChange={e => handleChange(e)}>{renderBox()}</Selectbox>
+          </SelectContainer>
+          <Register onClick={submitButton}>등록</Register>
+        </Centerbox>
+      </ModalContent>
+    </>
+  )
+}
+
+```
+📁DuttyModal.tsx
+```javascript
+export const DuttyModal = ({
+  close,
+  selectedDate,
+  setSelectedDate,
+  searchData,
+  data,
+  username
+}) => {
+  const SubmitText = {
+    ApplyDutty: '당직 신청',
+    SelectDate: '날짜 선택'
+  }
+
+  const [dutyDate] = useState(selectedDate || new Date())
+  const [ViewData] = useState({
+    startDate: '',
+    endDate: '',
+    reason: ''
+  })
+
+  const submitButton = () => {
+    selectedDate.setHours(9, 0, 0, 0)
+    const isDuplicateDate = data.filter(item => {
+      const itemDay = item.date
+      itemDay.setHours(9, 0, 0, 0)
+      if (
+        selectedDate.getTime() === itemDay.getTime() &&
+        item.username === username
+      ) {
+        return item
+      }
+    })
+    if (isDuplicateDate.length > 0) {
+      alert('이미 해당 날짜에 신청한 연차가 존재합니다.')
+      return false
+    }
+    const updatedData = {
+      ...ViewData,
+      dutyDate: UTCchangeKST(dutyDate)
+    }
+
+    if (confirm('당직 신청 하시겠습니까?')) {
+      sendReg(updatedData)
+    }
+
+    return false
+  }
+
+  const UTCchangeKST = date => {
+    let krDate = new Date(date)
+    krDate.setHours(krDate.getHours() + 9)
+    return krDate.toISOString()
+  }
+
+  const sendReg = async (updatedData: any) => {
+    try {
+      const response = await applyDuty(updatedData)
+      if (response.status === 200) {
+        alert('당직이 신청 되었습니다.')
+        searchData()
+        close()
+      } else {
+        alert('신청 실패했습니다. 관리자에게 문의하세요.')
+      }
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  const isWeekday = date => {
+    const day = date.getDay()
+    return day !== 0 && day !== 6
+  }
+
+  return (
+    <>
+      <ModalContent>
+        <Centerbox>
+          <XbuttonBox onClick={close}>x</XbuttonBox>
+          코드 생략..
+          <Register onClick={submitButton}>등록</Register>
+        </Centerbox>
+      </ModalContent>
+    </>
+  )
+}
+```
+->  위의 AnnualModal, DutyModal 코드를 보면 UTCchangeKST, sendReg, isWeekday 등 공통 코드가 작성되어 있는것을 볼수 있다. <br> 
+따라 이 코드를 재사용할수 있는 useCommonModal 이라는 customHook 을 만들었다 . <br> 
+
+🧩수정후 코드 <br>
+📁useCommonModal.tsx
+```javascript
+'use client'
+
+type ApplyALLType<T> = (updatedData: T) => Promise<any>;
+type SearchDataType = () => void;
+type CloseType = () => void;
+
+export const useCommonModal = <T,>(
+  ApplyALL: ApplyALLType<T>,
+  searchData: SearchDataType,
+  close: CloseType
+) => {
+  const UTCchangeKST = (date: Date) => {
+    let krDate = new Date(date);
+    krDate.setHours(krDate.getHours() + 9);
+    return krDate.toISOString();
+  };
+
+  const sendReg = async (updatedData: T) => {
+    try {
+      const response = await ApplyALL(updatedData);
+      if (response.status === 200) {
+        alert('신청 되었습니다.');
+        searchData();
+        close();
+      } else {
+        alert('신청 실패했습니다. 관리자에게 문의하세요.');
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const isWeekday = (date: Date) => {
+    const day = date.getDay();
+    return day !== 0 && day !== 6;
+  };
+
+  return {
+    UTCchangeKST,
+    sendReg,
+    isWeekday,
+  };
+};
+```
+📁AnnualModal.tsx
+```javascript
+export const AnnualModal = ({
+  close,
+  selectedDate,
+  setSelectedDate,
+  searchData,
+  data,
+  username,
+}: ModalProps) => {
+  const SubmitText = {
+    ApplyAnnual: '연차 신청',
+    SelectDate: '날짜 선택',
+    SelectReason: '사유선택',
+  };
+
+  const { UTCchangeKST, sendReg, isWeekday } = useCommonModal<ViewData>(
+    ApplyAnnual,
+    searchData,
+    close
+  );
+
+  const [startDate] = useState(selectedDate || new Date());
+  const [endDate, setEndDate] = useState(selectedDate || new Date());
+  const [getReason, setReason] = useState('연차');
+  const [ViewData] = useState<ViewData>({
+    startDate: '',
+    endDate: '',
+    reason: '',
+  });
+
+  const submitButton = () => {
+    if (selectedDate === null) {
+      console.error('날짜가 선택되지 않았습니다');
+      return;
+    }
+    selectedDate.setHours(9, 0, 0, 0);
+    const isDuplicateDate = data.filter((item) => {
+      const startDay = item.start;
+      const endDay = item.end;
+      startDay.setHours(9, 0, 0, 0);
+      endDay.setHours(9, 0, 0, 0);
+      endDate.setHours(9, 0, 0, 0);
+
+      if (
+        endDate >= startDay &&
+        endDate <= endDay &&
+        item.username === username
+      ) {
+        return item;
+      }
+    });
+
+    if (isDuplicateDate.length > 0) {
+      alert('이미 해당 날짜에 신청한 연차가 존재합니다.');
+      return false;
+    }
+
+    const updatedData = {
+      ...ViewData,
+      startDate: UTCchangeKST(startDate),
+      endDate: UTCchangeKST(endDate),
+      reason: getReason,
+    };
+
+    if (confirm('연차 신청 하시겠습니까?')) {
+      sendReg(updatedData);
+    }
+    return false;
+  };
+
+  const handleChange = (e: ChangeEvent<HTMLSelectElement>) => {
+    setReason(e.target.value);
+  };
+
+  const renderBox = () =>
+    CategoryBox.map((item) => {
+      return <option key={item.id}>{item.name}</option>;
+    });
+
+  return (
+    <>
+      <CommonModal>
+        <div
+          className="w-[20px] absolute top-[-10px] right-[10px] z-50 bg-white"
+          onClick={close}
+        >
+          x
+        </div>
+        
+         코드 생략 ..
+        <div className="w-[150px] relative mt-[30px] m-auto">
+          <select
+            className="w-[150px] bg-white p-[10px] border-solid border-2 border-violet-900 rounded-[10px] text-[15px]"
+            onChange={(e: ChangeEvent<HTMLSelectElement>) => handleChange(e)}
+          >
+            {renderBox()}
+          </select>
+        </div>
+        <div
+          className="w-[200px] p-[10px] relative top-[30px] ml-[80px] pb-[10px] bg-[#a8a3e29a] border-none rounded-[10px] font-bold cursor-pointer text-[15px]"
+          onClick={submitButton}
+        >
+          <p className="w-[30px] m-auto flex">등록</p>
+        </div>
+      </CommonModal>
+    </>
+  );
+};
+```
 
 
+📁DuttyModal.tsx
+```javascript
+export const DuttyModal = ({
+  close,
+  selectedDate,
+  setSelectedDate,
+  searchData,
+  data,
+  username,
+}: DuttyModalProps) => {
+  const SubmitText = {
+    ApplyDutty: '당직 신청',
+    SelectDate: '날짜 선택',
+  };
+  const { UTCchangeKST, sendReg, isWeekday } = useCommonModal<DutyData>(
+    ApplyDuty,
+    searchData,
+    close
+  );
+  const [dutyDate] = useState(selectedDate || new Date());
+  const [ViewData] = useState({
+    startDate: '',
+    endDate: '',
+    reason: '',
+  });
 
+  const submitButton = () => {
+    const isDuplicateDate = data.filter((item) => {
+      const itemDay = item.date;
+      itemDay.setHours(9, 0, 0, 0);
+      selectedDate.setHours(9, 0, 0, 0);
+      if (
+        selectedDate.getTime() === itemDay.getTime() &&
+        item.username === username
+      ) {
+        return item;
+      }
+    });
+    if (isDuplicateDate.length > 0) {
+      alert('이미 해당 날짜에 신청한 당직이 존재합니다.');
+      return false;
+    }
+    const updatedData = {
+      ...ViewData,
+      dutyDate: UTCchangeKST(dutyDate),
+    };
 
+    if (confirm('당직 신청 하시겠습니까?')) {
+      sendReg(updatedData);
+    }
+    return false;
+  };
 
+  return (
+    <>
+      <CommonModal>
+        <button
+          className="w-[24px] h-[25px] absolute top-[-15px] z-50 bg-white border-solid border-2 border-violet-900 text-[15px] right-[-5px]"
+          onClick={close}
+        >
+          <p className="mt-[-3px]">x</p>
+        </button>
+        코드 생략..
+        <div
+          className="w-[200px] p-[10px] relative top-[30px] ml-[80px] pb-[10px] bg-[#a8a3e29a] border-none rounded-[10px] font-bold cursor-pointer text-[15px]"
+          onClick={submitButton}
+        >
+          <p className="w-[30px] m-auto flex">등록</p>
+        </div>
+      </CommonModal>
+    </>
+  );
+};
 
+```
+-> 따라, 공통 함수가 들어갈 부분useCommonModal 커스텀 훅을 만들어 공통 함수를 return값으로 내보내었고, 커스텀 훅에 들어 가야할 함수는 
+ useCommonModal 에props 로 전달 해주었다. 
+ 
+📌 4. 홈,메인 페이지에서 내가 신청한 당직을 취소 하고 나서 , 캘린더 에도 해당 변경 값이 반영 되야 하지만 반영되지 않고 있었음. <br>
+원인: 내가 신청한 연차, 당직 출력 컴포넌트와 달력 컴포넌트가 따로 분리 되었기 때문에, 서로 변경값을 반영하지 못하였음 <br>
 
-6.
+🧩이전 컴포넌트 <br>
+📁Home.tsx <br>
+
+```javascript
+export const Home = () => {
+  const [CalDate, setCalDate] = useState<number>(2023)
+  const [annualDataList, setAnnualDataList] = useState([])
+  const [dutyDataList, setDutyDataList] = useState([])
+
+  const [user, SetUser] = useState({
+    remainVacation: ''
+  })
+  const [selectedOption, setSelectedOption] = useState('엑셀로 다운받기')
+
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    searchInfo()
+  }, [])
+
+  const searchInfo = () => {
+    UserInfoList().then(data => {
+      const uerData = data.data.response
+      SetUser(uerData)
+    })
+  }
+
+  const onChangeClick = () => {
+    navigate('/application')
+  }
+
+  const searchData = () => {
+    MyAnnualList(CalDate.toString())
+      .then(data => {
+        const returnDatalist = data.data.response
+        console.log(returnDatalist)
+        setAnnualDataList(returnDatalist)
+        return MyDutyList(CalDate.toString())
+      })
+      .then(data => {
+        const returnDatalist = data.data.response
+        setDutyDataList(returnDatalist)
+      })
+      .catch(error => {
+        console.error('Error fetching data:', error)
+      })
+  }
+
+  useEffect(() => {
+    searchData()
+  }, [CalDate])
+
+  const extractDate = dateString => {
+    const date = dateString.split('T')[0]
+    return date
+  }
+
+  const deleteButton = (type: string, id: string) => {
+    if (!window.confirm(`${type}를 취소 하시겠습니까?`)) {
+      alert(`취소되었습니다.`)
+      return false
+    }
+
+    try {
+      if (type == '연차') {
+        DeleteAnnualList(id).then(data => {
+          console.log(data.status)
+          if (data.status == 200) {
+            alert(`${type}가 취소되었습니다.`)
+            searchData()
+          } else {
+            alert(`취소가 실패했습니다.`)
+          }
+        })
+      } else {
+        DeleteDutyList(id).then(data => {
+          console.log(data.status)
+          if (data.status == 200) {
+            alert(`${type}가 취소되었습니다.`)
+            searchData()
+          } else {
+            alert(`취소가 실패했습니다.`)
+          }
+        })
+      }
+    } catch (e) {
+      console.log(e)
+      alert(`${e} 문의주세요.`)
+    }
+    return
+  }
+
+  const datalist = datalist => {
+    const filterViewData = datalist.filter(item => {
+      if (item.status !== 'CANCELLED') {
+        return item
+      }
+    })
+    return filterViewData
+  }
+
+  return (
+    <HomeContainer>
+      <Boards>
+        <AnnualBoard>
+          <BoxText>
+            <span>연차 신청</span>
+            <span>남은연차: {user.remainVacation}개 </span>
+          </BoxText>
+          <AuualListBox>
+            {datalist(annualDataList).map((item: Item) => (
+              <AuualList key={item.id}>
+                <h2>
+                  📌 {extractDate(item.startDate)} ~ {extractDate(item.endDate)}
+                </h2>
+                <StatusBox>{convertStatusToText(item.status)}</StatusBox>
+                <CancelBox onClick={() => deleteButton('연차', item.id)}>
+                  취소
+                </CancelBox>
+              </AuualList>
+            ))}
+          </AuualListBox>
+        </AnnualBoard>
+        <DutyBoard>
+          <BoxText>당직 신청</BoxText>
+          <DutyListBox>
+            {datalist(dutyDataList).map(el => (
+              <DutyList key={el.id}>
+                <h2>📌 {extractDate(el.dutyDate)}</h2>
+                <StatusBox>{convertStatusToText(el.status)}</StatusBox>
+                <CancelBox onClick={() => deleteButton('당직', el.id)}>
+                  취소
+                </CancelBox>
+              </DutyList>
+            ))}
+          </DutyListBox>
+        </DutyBoard>
+      </Boards>
+      코드 생략..
+      <CalendarBoard>
+        <AllDataList
+          CalendarDate={setCalDate}
+          annualData={annualDataList}
+          dutyData={dutyDataList}
+        />
+      </CalendarBoard>
+    </HomeContainer>
+  )
+}
+```
+-> 이전 컴포넌트에서는 상위 컴포넌트 MainHome 페이지에 내 연차 , 당직 출력 컴포넌트 / 캘린터 컴포넌트를 한곳에 작성하고 <br>
+연차, 당직의 [ annualDataList, setAnnualDataList ] state 값을 props 를 사용해 캘린더 컴포넌트에도 전달 하도록 코드를 작성 하였음. <br>
+-> 위와 같이 상위 컴포넌트에서 모든 컴포넌트 로직을 작성후 props로 전달해주니 데이터 변경 값이 캘린더에도 잘 반영되었음.<br>
+하지만, 많은 컴포넌트를 한곳에 작성하다 보니 가독성이 좋지 않다는것을 느꼈고, 이후 역할별 컴포넌트를 분리 하였음.<br>
+
+🧩수정후 컴포넌트 (컴포넌트 구조만 분리 된 상태) <br>
+-> 위의 코드를 보면 삭제후 조회하는 함수 searchData 에서 받아오는 data를 각각 setAnnualDataList, setDutyDataList 에 저장하고 업데이트된 
+state 값을 props로 보내고 있다. <br> 하지만, 아래 컴포넌트 코드 에서는 업데이트 된 state 값을 전달하는 코드가 있지 않았다. 
+
+📁app/home/page.tsx
+```javascript
+export default function HomeMain() {
+  return (
+    <>
+      <meta name="description" content="Put your description here."></meta>
+      <div className="relative flex content-center">
+        <div className="h-[1280px] relative font-LINESeedKRBd top-[40px] m-auto bg-fuchsia-500">
+          <div className="w-full mt-[60px] flex">
+            <AllAnnualDuty />
+          </div>
+          <CenterBarBox />
+          <AllCalendarList />
+        </div>
+      </div>
+    </>
+  );
+}
+```
+📁components/home/mainHome.tsx
+```javascript
+export default function AllAnnualDuty() {
+  const [annualDataList, setAnnualDataList] = useState([])
+  const [dutyDataList, setDutyDataList] = useState([])
+  const [CalDate] = useState<number>(2023);
+
+  const searchData = useCallback(() => {
+    MyAnnualList(CalDate.toString())
+      .then((data) => {
+        const returnDatalist = data.response;
+        setAnnualDataList(returnDatalist);
+        return MyDutyList(CalDate.toString());
+      })
+      .then((data) => {
+        const returnDatalist = data.response;
+        setDutyDataList(returnDatalist);
+      })
+      .catch((error) => {
+        console.error('Error', error);
+      });
+  }, [CalDate]);
+
+  useEffect(() => {
+    searchData();
+  }, []);
+
+  const extractDate = (dateString: string) => {
+    if (dateString) {
+      const date = dateString.split('T')[0];
+      return date;
+    }
+    return false;
+  };
+
+  const datalist = useCallback((datalist: any[]) => {
+    const filterViewData = datalist.filter((item: { status: string }) => {
+      return item.status !== 'CANCELLED';
+    });
+    return filterViewData;
+  }, []);
+
+  const deleteButton = useCallback(
+    async (type: string, id: string) => {
+      if (!window.confirm(`${type}를 취소 하시겠습니까?`)) {
+        alert(mainTexts.cancelText);
+        return false;
+      }
+
+      try {
+        let deleteFunction;
+        if (type === '연차') {
+          deleteFunction = DeleteAnnualList;
+        } else {
+          deleteFunction = DeleteDutyList;
+        }
+        const response = await deleteFunction(id);
+        if (response.status === 200) {
+          alert(`${type}가 취소되었습니다.`);
+          searchData();
+        } else {
+          alert(mainTexts.failCancelText);
+        }
+      } catch (error) {
+        console.error(error);
+        alert(mainTexts.areadyApply);
+      }
+    },[searchData]);
+
+  return (
+    <div className="m-auto flex gap-[10px]">
+      <AnnualContainer
+        datalist={datalist}
+        annualDataList={annualDataList}
+        extractDate={extractDate}
+        deleteButton={deleteButton}
+      />
+      <DutyContainer
+        datalist={datalist}
+        dutyDataList={dutyDataList}
+        extractDate={extractDate}
+        deleteButton={deleteButton}
+      />
+    </div>
+  );
+}
+```
+-> 따라, annualDataList, setAnnualDataList  의 값을 전역적으로 사용할수 있도록 store 을 생성해 해당 값을 저장하고, 전역적으로 업데이트 된 값을 사용할수 있도록 작성.  <br>
+
+📁store.tsx
+```javascript
+export const useUpdateDate = create<StoreState>((set) => ({
+  annualDataList: [],
+  dutyDataList: [],
+  setAnnualDataList: (data) => set({ annualDataList: data }),
+  setDutyDataList: (data) => set({ dutyDataList: data }),
+}));
+```
+-> store 에 전역으로 공유될 값을 생성 <br>
+
+🧩store 반영후 코드 <br>
+-> searchData 함수가 실행되고 받아오는 data.response 를 store에 생성된 setState 값에 저장.
+
+📁mainHome.tsx
+```javascript
+export default function AllAnnualDuty() {
+  // store 에 생성된 값 사용
+  const { annualDataList, dutyDataList, setAnnualDataList, setDutyDataList } =
+    useUpdateDate();
+  const [CalDate] = useState<number>(2023);
+
+  const searchData = useCallback(() => {
+    MyAnnualList(CalDate.toString())
+      .then((data) => {
+        const returnDatalist = data.response;
+        setAnnualDataList(returnDatalist);
+        return MyDutyList(CalDate.toString());
+      })
+      .then((data) => {
+        const returnDatalist = data.response;
+        setDutyDataList(returnDatalist);
+      })
+      .catch((error) => {
+        console.error('Error', error);
+      });
+  }, [CalDate]);
+
+  useEffect(() => {
+    searchData();
+  }, []);
+
+ 코드 생략..
+
+  return (
+    <div className="m-auto flex gap-[10px]">
+      <AnnualContainer
+        datalist={datalist}
+        annualDataList={annualDataList}
+        extractDate={extractDate}
+        deleteButton={deleteButton}
+      />
+      <DutyContainer
+        datalist={datalist}
+        dutyDataList={dutyDataList}
+        extractDate={extractDate}
+        deleteButton={deleteButton}
+      />
+    </div>
+  );
+}
+```
+📁 allCalendar.tsx <br>
+-> useEffect 의 인자 값을 사용해 annualDataList, dutyDataList 가 변경될시   searchCalendar(); 함수를 실행 시켜 
+재조회 해오게 끔 코드 작성. 
+
+```javascript
+export const AllCalendarList = () => {
+  const [CalDate, setCalDate] = useState<number>(2023);
+  const [viewDrow, setViewDrow] = useState<CombinedDataItem[]>([]);
+  const { annualDataList, dutyDataList } = useUpdateDate();
+
+  useEffect(() => {
+    searchCalendar();
+  }, [CalDate, annualDataList, dutyDataList]);
+
+  const searchCalendar = () => {
+    Promise.all([
+      allAnnualList(CalDate.toString()),
+      allDutyList(CalDate.toString()),
+    ])
+      .then(([annualDataList, dutyDataList]) => {
+        const annualReturnData = annualDataList.response.map(
+          (item: AnnualDrowItem) => ({
+            title: getTitleWithStatus(item),
+            username: item.username,
+            start: new Date(item.startDate).toISOString(),
+            end: new Date(item.endDate).toISOString(),
+            type: 'ANNUAL',
+          })
+        );
+
+        const dutyReturnData = dutyDataList.response.map(
+          (item: DutyItemType) => ({
+            ...item,
+            title: getTitleWithStatus(item),
+            username: item.username,
+            date: new Date(item.dutyDate),
+            type: 'DUTY',
+          })
+        );
+
+        const combinedData = [...annualReturnData, ...dutyReturnData];
+        setViewDrow(combinedData);
+      })
+      .catch((error) => {
+        console.error('Error fetching data:', error);
+      });
+  };
+
+  return (
+    <>
+      <div className="w-[1200px] h-[1028px] flex m-auto top-[30px] rounded-[10px] pb-[124px]">
+        <div className="w-full h-[980px] pb-[40px] bg-[#ffff] relative rounded-[10px] shadow-[1px_2px_7px_1px_rgba(0,0,0,0.3)] m-auto">
+          <CommonCalendar
+            viewDrow={viewDrow}
+            CalDate={CalDate}
+            setCalDate={setCalDate}
+          />
+        </div>
+      </div>
+    </>
+  );
+};
+```
 
 -------------------------------------
 🔥성능 변화 기록🔥<br>
@@ -164,12 +997,15 @@ export default function HomeMain() {
 
 -------
 2. 🌺연차 , 당직 신청 페이지🌺
+-> 기존 코드 로직에서 모달 페이지 공통 함수 customHook 생성, swr 을 이용한 유저 정보 가져오기 등 수정후 초기 로딩 속도가 4.5초 -> 0.3 초로 개선 되었다. 
 
 ✨ AS-IS <br>
--> nextJs 마이그레이션 전 연차,당직 페이지 성능<br> 
+-> nextJs 마이그레이션 전 연차,당직 신청 페이지 성능<br> 
 <img width="350" height="400" alt="image" src="https://github.com/hahahaday12/Next-Annual-Duty/assets/101441685/37a2c729-f4c2-4408-a4f0-d2bc760a2ea7"><br>
 
 ✨ TO-BE <br>
--> nextJs 마이그레이션 후 main페이지 성능<br> 
+-> nextJs 마이그레이션 후 연차,당직 신청 페이지 성능<br> 
 <img width="350" height="400" alt="image" src="https://github.com/hahahaday12/Next-Annual-Duty/assets/101441685/732d3086-5e79-41c1-8a2e-bc44025678c7"><br>
+
+
 
