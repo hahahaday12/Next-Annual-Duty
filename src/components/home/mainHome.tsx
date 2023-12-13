@@ -10,6 +10,13 @@ import {
 } from '../api/allApis';
 import { mainTexts } from '@/constants/mainHome';
 import { useUpdateDate } from '@/utils/store';
+import { AnnualDrowItem, DutyItemType } from '../application/dayApply';
+
+export type CombinedDatalist = AnnualDrowItem | DutyItemType;
+export type Delete = {
+  type: string;
+  id: number | string;
+};
 
 export default function AllAnnualDuty() {
   const { annualDataList, dutyDataList, setAnnualDataList, setDutyDataList } =
@@ -36,20 +43,23 @@ export default function AllAnnualDuty() {
     searchData();
   }, []);
 
-  const extractDate = (dateString: string) => {
+  const extractDate = (dateString: string): string => {
     if (dateString) {
       const date = dateString.split('T')[0];
       return date;
     }
-    return false;
+    return '';
   };
 
-  const datalist = useCallback((datalist: any[]) => {
-    const filterViewData = datalist.filter((item: { status: string }) => {
-      return item.status !== 'CANCELLED';
-    });
-    return filterViewData;
-  }, []);
+  const datalist = useCallback(
+    (datalist: CombinedDatalist[]) => {
+      const filterViewData = datalist.filter((item) => {
+        return 'status' in item && item.status !== 'CANCELLED';
+      });
+      return filterViewData;
+    },
+    []
+  );
 
   const deleteButton = useCallback(
     async (type: string, id: string) => {
@@ -76,7 +86,9 @@ export default function AllAnnualDuty() {
         console.error(error);
         alert(mainTexts.areadyApply);
       }
-    },[searchData]);
+    },
+    [searchData]
+  );
 
   return (
     <div className="m-auto flex gap-[10px]">
