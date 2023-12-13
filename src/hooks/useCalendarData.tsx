@@ -12,6 +12,7 @@ export type Item = {
 
 type Annual = {
   title: string;
+  response: any;
   startDate: Date;
   endDate: Date;
   type: string;
@@ -31,7 +32,7 @@ type Duty = {
 export type CombinedDataItem = Annual | Duty;
 
 export const useCalendarData = (
-  fetchDataFunction1: Promise<any>,
+  fetchDataFunction1: Promise<Annual>,
   fetchDataFunction2: Promise<Duty>,
   getStatus: (item: ItemUsername) => string,
   CalDate: string
