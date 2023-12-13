@@ -4,20 +4,28 @@ import { useUser } from '@/hooks/useUser';
 import { convertStatusToText } from '@/constants/customStatus';
 import { StatusBox } from '@/components/styleCommon/styleCommon';
 import { ApplyInfobox } from '@/components/home/applyLayout/boxComponets';
+import { CombinedDatalist } from '../mainHome';
 
-interface Item {
+export type AnnualItem = {
   id: string;
   startDate: string;
   endDate: string;
   status: string;
-}
+};
+
+type AnnualProps = {
+  datalist: (data: CombinedDatalist[]) => any;
+  annualDataList: CombinedDatalist[];
+  extractDate: (dateString: string) => string;
+  deleteButton: (type: string, id: string) => void;
+};
 
 export const AnnualContainer = ({
   datalist,
   annualDataList,
   extractDate,
   deleteButton,
-}: any) => {
+}: AnnualProps) => {
   const { user } = useUser();
 
   const remaindata = user?.response?.remainVacation;
@@ -32,7 +40,7 @@ export const AnnualContainer = ({
           </span>
         </div>
         <div className="w-[453px] h-[200px] relative top-3 m-auto overflow-y-auto max-h-[200px]">
-          {datalist(annualDataList).map((item: Item) => (
+          {datalist(annualDataList).map((item: AnnualItem) => (
             <div
               className="w-full h-[30px] m-auto flex mt-[20px]"
               key={item.id}
