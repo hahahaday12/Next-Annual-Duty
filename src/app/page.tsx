@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { SignIn } from './(form)/formSignin';
+import { SignIn } from './(form)/SignInpage';
 import BackgroundImage from '@/assets/bgblue.avif';
 
 export default function Home() {
